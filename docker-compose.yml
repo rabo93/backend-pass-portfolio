@@ -28,7 +28,8 @@ services:
           memory: 2GB   # 최대 2GB 메모리 할당
 
   app:
-    build: .
+    build: .  # build: 키워드는 도커 이미지를 직접 빌드(직접 밀키트를 만들겠다..)
+    # => 여기서 .의 의미는 docker-compose.yml 파일이 있는 디렉토리를 빌드 컨텍스트(build context)로 지정한다
     container_name: spring-app
     ports:
       - "8080:8080"
@@ -51,6 +52,7 @@ services:
     networks:
       - monitoring
 
+# prometheus : SpringBoot 애플리케이션의 상태와 각종 지표들 아니면 CPU나 DB같은 매트릭을 가져가주는 역할
   prometheus:
     image: prom/prometheus
     container_name: prometheus
