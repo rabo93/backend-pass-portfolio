@@ -49,23 +49,23 @@ jobs:
           cat > commands.json <<EOF
           {
             "commands": [
-              "docker stop portfolio-app || true",  # 기존 컨테이너 중지
-              "docker rm portfolio-app || true",    # 기존 컨테이너 삭제
-              "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}", # ECR 로그인
-              "docker run -d --name portfolio-app -p 8080:8080 \               # 새 컨테이너 실행
-                -e JAVA_OPTS=-Xmx256m \                                       # JVM 옵션
-                -e SPRING_DATASOURCE_URL=jdbc:mysql://${{ secrets.RDS_ENDPOINT }}/portfolio?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true \  # DB 연결 URL
-                -e SPRING_DATASOURCE_PASSWORD=${{ secrets.RDS_PASSWORD }} \   # DB 비밀번호
-                ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${GITHUB_SHA}" # ECR에서 가져온 최신 이미지 실행
+              "docker stop portfolio-app || true",
+              "docker rm portfolio-app || true",
+              "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
+              "docker run -d --name portfolio-app -p 8080:8080 \
+                -e JAVA_OPTS=-Xmx256m \
+                -e SPRING_DATASOURCE_URL=jdbc:mysql://${{ secrets.RDS_ENDPOINT }}/portfolio?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true \
+                -e SPRING_DATASOURCE_PASSWORD=${{ secrets.RDS_PASSWORD }} \
+                ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${GITHUB_SHA}"
             ]
           }
           EOF
 
       - name: Deploy to EC2 using SSM
         run: |
+          # AWS Systems Manager(SSM)를 사용해 EC2에서 명령어 실행
           aws ssm send-command \
-          --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
-          --document-name "AWS-RunShellScript" \
-          --comment "Deploy portfolio app" \
-          --parameters file://commands.json
-      
+            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy portfolio app" \
+            --parameters file://commands.json
