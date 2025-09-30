@@ -63,8 +63,9 @@ jobs:
 
       - name: Deploy to EC2 using SSM
         run: |
-          aws ssm send-command \                          # AWS Systems Manager(SSM)를 사용해 EC2에서 명령어 실행
-            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \ # 대상 EC2 인스턴스 ID
-            --document-name "AWS-RunShellScript" \          # EC2에서 실행할 명령어를 지정하는 AWS 문서
-            --comment "Deploy portfolio app" \              # 실행 로그에 표시할 코멘트
-            --parameters file://commands.json               # 실행할 명령어 JSON 파일 전달
+          aws ssm send-command \
+          --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+          --document-name "AWS-RunShellScript" \
+          --comment "Deploy portfolio app" \
+          --parameters file://commands.json
+      
