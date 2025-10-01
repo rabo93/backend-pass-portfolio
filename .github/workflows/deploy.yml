@@ -43,6 +43,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} # 빌드된 이미지를 AWS ECR에 업로드
 
 
+
       - name: Deploy to EC2 using SSM
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
