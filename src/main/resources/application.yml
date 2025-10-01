@@ -7,8 +7,8 @@ spring:
     hikari:
       maximum-pool-size: 32
   #   # TODO: Named Lock 을 위해 아래 주석을 해제해야함
-  #    hikari:
-  #      maximum-pool-size: 64
+      hikari:
+        maximum-pool-size: 64
   jpa:
     defer-datasource-initialization: true
     hibernate:
